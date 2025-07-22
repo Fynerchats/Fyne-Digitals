@@ -18,45 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         registerForm.style.display = 'block';
         loginForm.style.display = 'none';
     });
-    // Make sure this is inside your DOMContentLoaded event
-document.addEventListener('DOMContentLoaded', function() {
-    // ... your existing code ...
     
-    // When notes button is clicked
-    document.querySelectorAll('[data-section="notes"]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            setActiveSection('notes');
-        });
-    });
-    
-    // Add to store button functionality
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.add-to-store-btn')) {
-            const btn = e.target.closest('.add-to-store-btn');
-            alert('Added to store: ' + btn.dataset.noteId);
-            // You'll implement the actual store functionality later
-        }
-    });
-    
-    // Your existing section switching function
-    function setActiveSection(sectionId) {
-        // Hide all content sections
-        document.querySelectorAll('.content-section').forEach(section => {
-            section.classList.remove('active');
-        });
-        
-        // Show the selected section
-        document.getElementById(sectionId + '-content').classList.add('active');
-        
-        // Update active state of nav buttons
-        document.querySelectorAll('.sec-nav-btn, .menu-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.section === sectionId) {
-                btn.classList.add('active');
-            }
-        });
-    }
-});
     // Show Password Toggle
     const showPassword = document.getElementById('show-password');
     const passwordInput = document.getElementById('password');
@@ -235,5 +197,44 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Shuffle the password
         return password.split('').sort(() => 0.5 - Math.random()).join('');
+    }
+});
+// Make sure this is inside your DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', function() {
+    // ... your existing code ...
+    
+    // When notes button is clicked
+    document.querySelectorAll('[data-section="notes"]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            setActiveSection('notes');
+        });
+    });
+    
+    // Add to store button functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.add-to-store-btn')) {
+            const btn = e.target.closest('.add-to-store-btn');
+            alert('Added to store: ' + btn.dataset.noteId);
+            // You'll implement the actual store functionality later
+        }
+    });
+    
+    // Your existing section switching function
+    function setActiveSection(sectionId) {
+        // Hide all content sections
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        // Show the selected section
+        document.getElementById(sectionId + '-content').classList.add('active');
+        
+        // Update active state of nav buttons
+        document.querySelectorAll('.sec-nav-btn, .menu-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.section === sectionId) {
+                btn.classList.add('active');
+            }
+        });
     }
 });
