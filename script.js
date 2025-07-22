@@ -238,3 +238,175 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+require('dotenv').config();
+const express = require('express');
+const nodemailer = require('nodemailer');
+const bodyParser = require('body-parser');
+const app = express();
+const PORT = 3000;
+
+app.use(bodyParser.json());
+app.use(express.static('public'));
+
+// In-memory storage for demo (use database in production)
+const users = {};
+
+// Email transporter setup
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+// Registration endpoint
+app.post('/register', async (req, res) => {
+    const { fullname, email, role } = req.body;
+    
+    // Generate random credentials
+    const username = generateUsername();
+    const password = generatePassword();
+    
+    // Store user (in memory for demo)
+    users[email] = { username, password, fullname, role };
+    
+    // Send email
+    try {
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Your Fymerstu Account Credentials',
+            html: `
+                <h2>Welcome to Fymerstu, ${fullname}!</h2>
+                <p>Here are your login credentials:</p>
+                <p><strong>Username:</strong> ${username}</p>
+                <p><strong>Password:</strong> ${password}</p>
+                <p>Please keep this information secure.</p>
+            `
+        });
+        res.json({ success: true, message: 'Registration successful. Check your email for credentials.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Failed to send email' });
+    }
+});
+
+// Login endpoint
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    
+    // Find user by username
+    const user = Object.values(users).find(u => u.username === username);
+    
+    if (user && user.password === password) {
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+});
+
+// Helper functions
+function generateUsername() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < 10; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
+function generatePassword() {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const numbers = '0123456789';
+    const symbols = '?!.';
+    let password = '';
+    
+    // Ensure at least one of each type
+    password += letters.charAt(Math.floor(Math.random() * letters.length));
+    password += numbers.charAt(Math.floor(Math.random() * numbers.length));
+    password += symbols.charAt(Math.floor(Math.random() * symbols.length));
+    
+    // Fill remaining characters
+    const allChars = letters + numbers + symbols;
+    for (let i = 3; i < 10; i++) {
+        password += allChars.charAt(Math.floor(Math.random() * allChars.length));
+    }
+    
+    // Shuffle the password
+    return password.split('').sort(() => 0.5 - Math.random()).join('');
+}
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+document.addEventListener('DOMContentLoaded', function() {
+    // ... existing code ...
+    
+    // Registration form submission
+    document.getElementById('register-btn').addEventListener('click', async function() {
+        const fullname = document.getElementById('fullname').value;
+        const email = document.getElementById('email').value;
+        const role = document.querySelector('input[name="role"]:checked')?.value || 'student';
+        
+        if (!fullname || !email) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        try {
+            const response = await fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ fullname, email, role })
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                alert(data.message);
+                // Switch to login tab
+                document.getElementById('login-tab').click();
+            } else {
+                alert(data.message || 'Registration failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Registration failed. Please try again.');
+        }
+    });
+    
+    // Login form submission
+    document.getElementById('login-btn').addEventListener('click', async function() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        if (!username || !password) {
+            alert('Please enter both username and password');
+            return;
+        }
+        
+        try {
+            const response = await fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                // Successful login
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('app-container').style.display = 'block';
+            } else {
+                alert(data.message || 'Invalid credentials');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Login failed. Please try again.');
+        }
+    });
+    
+    // ... rest of your existing code ...
+});
