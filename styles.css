@@ -16,7 +16,137 @@ body.dark-mode {
     background-color: #222;
     color: #f5f5f5;
 }
+/* Notes Section */
+#notes-content {
+    padding: 20px;
+}
 
+.notes-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 25px;
+}
+
+.notes-container h2 {
+    color: #444;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chemistry-notes {
+    margin-top: 20px;
+}
+
+.note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.note-header h3 {
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-to-store-btn {
+    background: #6e8efb;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.note-section {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee;
+}
+
+.note-section:last-child {
+    border-bottom: none;
+}
+
+.note-section h4 {
+    color: #444;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.note-content {
+    padding-left: 25px;
+}
+
+.note-content p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.note-content ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.note-content li {
+    margin-bottom: 8px;
+}
+
+.particles-table, .models-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+.particles-table th, 
+.particles-table td,
+.models-table th,
+.models-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.particles-table th,
+.models-table th {
+    background-color: #f8f9ff;
+}
+
+.example {
+    background-color: #f8f9ff;
+    padding: 12px 15px;
+    border-left: 3px solid #6e8efb;
+    margin: 15px 0;
+    font-style: italic;
+}
+
+.summary {
+    background-color: #f5f7ff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.indent {
+    margin-left: 20px;
+    list-style-type: none;
+}
+
+.examples {
+    margin-left: 30px;
+}
 /* Authentication Screen */
 .auth-container {
     display: flex;
